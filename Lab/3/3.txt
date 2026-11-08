@@ -1,0 +1,27 @@
+3. Write the program to create five Child Processes using system call fork() and display their ids.
+
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <sys/wait.h>
+int main() {
+    pid_t pid;
+    for (int i = 0; i < 5; i++) {
+        pid = fork();
+        if (pid == -1) {
+            printf("Fork error");
+            exit(1);
+        }
+        else if (pid == 0) {
+            printf("Child %d: PID = %d, PPID = %d\n",
+                   i, getpid(), getppid());
+            exit(0);
+        }
+        else
+            printf("Parent created child %d\n", i);
+    }
+    for (int i = 0; i < 5; i++)
+        wait(NULL);
+    printf("Parent %d: All children finished\n", getpid());
+    return 0;
+}

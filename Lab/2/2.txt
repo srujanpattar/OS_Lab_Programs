@@ -1,0 +1,26 @@
+2. Write a C program that uses the appropriate Unix system calls to read the contents of a file and display it on the terminal. The program should prompt the user to enter the filename as input from the keyboard.
+
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+int main() {
+    char fname[50], buffer[1000];
+    int fd, size;
+    printf("Enter filename: ");
+    scanf("%49s", fname);
+    fd = open(fname, O_RDONLY);
+    if (fd == -1) {
+        printf("File open error");
+        return 0;
+    }
+    size = read(fd, buffer, sizeof(buffer) - 1);
+    if (size == -1) {
+        printf("File read error");
+        close(fd);
+        return 0;
+    }
+    buffer[size] = '\0';
+    printf("File contents:\n%s", buffer);
+    close(fd);
+    return 0;
+}

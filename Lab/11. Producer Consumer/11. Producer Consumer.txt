@@ -1,0 +1,37 @@
+4. Write a C program to simulate producer – consumer problem using semaphores.
+
+#include <stdio.h>
+int main() {
+    int n, in = 0, out = 0, items = 0, choice, x;  
+    printf("Enter buffer size: ");
+    scanf("%d", &n);
+    int buffer[n];
+    do {
+        printf("\n1. Produce  2. Consume  3. Exit");
+        printf("\nEnter choice: ");
+        scanf("%d", &choice);
+        switch (choice) {
+            case 1:
+                if (items == n)
+                    printf("Buffer is full");
+                else {
+                    printf("Enter item: ");
+                    scanf("%d", &x);
+                    buffer[in] = x;
+                    in = (in + 1) % n;
+                    items++;
+                }
+                break;
+            case 2:
+                if (items == 0)
+                    printf("Buffer is empty");
+                else {
+                    printf("Consumed: %d", buffer[out]);
+                    out = (out + 1) % n;
+                    items--;
+                }
+                break;
+        }
+    } while (choice != 3);
+    return 0;
+}

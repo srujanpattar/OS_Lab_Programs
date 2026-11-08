@@ -1,0 +1,49 @@
+3. Write a C program to implement Round Robin Scheduling algorithm to determine total waiting time, average waiting time, total turn around time and average turnaround time.
+
+#include <stdio.h>
+struct process {
+    int pid, bt, wt, tat, rembt;
+};
+int main() {
+    int n, tq, time = 0, done = 0, twt = 0, ttat = 0;
+    printf("Enter number of processes: ");
+    scanf("%d", &n);
+    printf("Enter time quantum: ");
+    scanf("%d", &tq);
+    struct process p[n];
+    for (int i = 0; i < n; i++) {
+        printf("Enter BT of P%d: ", i+1);
+        scanf("%d", &p[i].bt);
+        p[i].pid = i+1;
+        p[i].rembt = p[i].bt;
+    }
+    // Round Robin Scheduling
+    while (done < n) {
+        for (int i = 0; i < n; i++) {
+            if (p[i].rembt > 0) {
+                if (p[i].rembt > tq) {
+                    time += tq;
+                    p[i].rembt -= tq;
+                }
+                else {
+                    time += p[i].rembt;
+                    p[i].rembt = 0;
+                    done++;
+                    p[i].tat = time;
+                    p[i].wt = p[i].tat - p[i].bt;
+                    twt += p[i].wt;
+                    ttat += p[i].tat;
+                }
+            }
+        }
+    }
+    printf("\nPID\tBT\tWT\tTAT\n");
+    for (int i = 0; i < n; i++)
+        printf("P%d\t%d\t%d\t%d\n",
+        p[i].pid, p[i].bt, p[i].wt, p[i].tat);
+    printf("\nTotal WT = %d", twt);
+    printf("\nAverage WT = %.2f", (float)twt/n);
+    printf("\nTotal TAT = %d", ttat);
+    printf("\nAverage TAT = %.2f\n", (float)ttat/n);
+    return 0;
+}

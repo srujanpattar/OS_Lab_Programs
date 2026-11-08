@@ -1,0 +1,31 @@
+5. Write a C program that registers a signal handler for SIGINT, SIGTERM, SIGHUP, SIGALRM, and SIGUSR1. The handler should receive each signal and perform some operation.
+
+#include <stdio.h>
+#include <unistd.h>
+#include <signal.h>
+void handler(int sig) {
+    if (sig == SIGINT)
+        printf("Caught Interrupt signal\n");
+    else if (sig == SIGTERM)
+        printf("Caught Terminate signal\n");
+    else if (sig == SIGHUP)
+        printf("Caught Hangup signal\n");
+    else if (sig == SIGALRM)
+        printf("Caught Alarm signal\n");
+    else if (sig == SIGUSR1)
+        printf("Caught User defined signal\n");
+}
+int main() {
+    signal(SIGINT, handler);
+    signal(SIGTERM, handler);
+    signal(SIGHUP, handler);
+    signal(SIGALRM, handler);
+    signal(SIGUSR1, handler);
+    alarm(20);
+    printf("Process ID: %d\n", getpid());
+    while (1) {
+        printf("Waiting for signal...\n");
+        sleep(5);
+    }
+    return 0;
+}

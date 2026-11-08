@@ -1,0 +1,46 @@
+2.Write a C program to implement Shortest Job First Scheduling algorithm to determine total waiting time, average waiting time, total turn around time and average turnaround time.
+
+#include <stdio.h>
+struct process {
+    int pid, bt, wt, tat;
+};
+int main() {
+    int n, wt = 0, twt = 0, ttat = 0, temp;
+    printf("Enter number of processes: ");
+    scanf("%d", &n);
+    struct process p[n];
+    for (int i = 0; i < n; i++) {
+        printf("Enter BT of P%d: ", i + 1);
+        scanf("%d", &p[i].bt);
+        p[i].pid = i + 1;
+    }
+    // Sort according to Burst Time (Bubble Sort)
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (p[j].bt > p[j + 1].bt) {
+                temp = p[j].bt;
+                p[j].bt = p[j + 1].bt;
+                p[j + 1].bt = temp;
+
+                temp = p[j].pid;
+                p[j].pid = p[j + 1].pid;
+                p[j + 1].pid = temp;
+            }
+        }
+    }
+    printf("\nPID\tBT\tWT\tTAT\n");
+    for (int i = 0; i < n; i++) {
+        p[i].wt = wt;
+        p[i].tat = p[i].bt + wt;
+        wt += p[i].bt;
+        twt += p[i].wt;
+        ttat += p[i].tat;
+        printf("P%d\t%d\t%d\t%d\n",
+               p[i].pid, p[i].bt, p[i].wt, p[i].tat);
+    }
+    printf("\nTotal WT = %d", twt);
+    printf("\nAverage WT = %.2f", (float)twt / n);
+    printf("\nTotal TAT = %d", ttat);
+    printf("\nAverage TAT = %.2f\n", (float)ttat / n);
+    return 0;
+}

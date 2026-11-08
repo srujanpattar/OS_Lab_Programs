@@ -1,0 +1,60 @@
+5. Write a C program to demonstrate Bankers Deadlock avoidance algorithm.
+
+#include <stdio.h>
+int main() {
+    int p, r, finished = 0, flag;
+    printf("Enter number of processes: ");
+    scanf("%d", &p);
+    printf("Enter number of resources: ");
+    scanf("%d", &r);
+    int max[p][r], alloc[p][r], need[p][r];
+    int avail[r], finish[p], safe[p];
+    printf("Enter Max matrix:\n");
+    for (int i = 0; i < p; i++)
+        for (int j = 0; j < r; j++)
+            scanf("%d", &max[i][j]);
+    printf("Enter Allocation matrix:\n");
+    for (int i = 0; i < p; i++)
+        for (int j = 0; j < r; j++)
+            scanf("%d", &alloc[i][j]);
+    printf("Enter Available resources:\n");
+    for (int j = 0; j < r; j++)
+        scanf("%d", &avail[j]);
+    // Calculate Need
+    for (int i = 0; i < p; i++) {
+        finish[i] = 0;
+        for (int j = 0; j < r; j++)
+            need[i][j] = max[i][j] - alloc[i][j];
+    }
+    // Safety Algorithm
+    while (finished < p) {
+        flag = 0;
+        for (int i = 0; i < p; i++) {
+            if (finish[i] == 0) {
+                for (int j = 0; j < r; j++)
+                    if (need[i][j] > avail[j])
+                        break;
+                int j;
+                for (j = 0; j < r; j++)
+                    if (need[i][j] > avail[j])
+                        break;
+                if (j == r) {
+                    for (int j = 0; j < r; j++)
+                        avail[j] += alloc[i][j];
+                    safe[finished++] = i;
+                    finish[i] = 1;
+                    flag = 1;
+                }
+            }
+        }
+        if (flag == 0) {
+            printf("\nSystem is NOT in a safe state.\n");
+            return 0;
+        }
+    }
+    printf("\nSystem is in a SAFE state.");
+    printf("\nSafe sequence: ");
+    for (int i = 0; i < p; i++)
+        printf("P%d ", safe[i]);
+    return 0;
+}
